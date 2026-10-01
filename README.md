@@ -22,13 +22,13 @@ Este projeto consiste em 3 painéis no Power BI focados na análise de risco de 
 O relatório foi estruturado em três telas interativas, desenhadas para priorizar a clareza e a facilidade de navegação:
 
 1. **Evolução do Preço Unitário (PU):** Acompanhamento temporal da curva de preços de um título público.
-   > `![Tela 1 - Gráfico PU](./assets/pu_chart.png)`
+   [Tela 1 - Gráfico PU](./assets/pu_chart.png)
 
 2. **V@R Paramétrico:** Cálculo da perda máxima esperada considerando a volatilidade e a média da série histórica para o intervalo de confiança selecionado.
-   > `![Tela 2 - V@R Paramétrico](./assets/var_parametrico.png)`
+   [Tela 2 - V@R Paramétrico](./assets/var_parametrico.png)
 
 3. **V@R Histórico:** Análise não paramétrica baseada no percentil real da distribuição dos retornos observados num determinado período.
-   > `![Tela 3 - V@R Histórico](./assets/var_historico.png)`
+   [Tela 3 - V@R Histórico](./assets/var_historico.png)
 
 ## 🌐 Fonte dos Dados
 
