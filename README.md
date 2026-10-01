@@ -8,12 +8,17 @@ O relatório foi estruturado em 3 painéis:
 
 Evolução do Preço Unitário (PU): Acompanhamento temporal da curva de preços de um título público.
 
-VaR Paramétrico: Cálculo da perda máxima esperada considerando a volatilidade da série e o intervalo de confiança num determinado período.
-
-VaR Histórico: Análise não paramétrica baseada no percentil real da distribuição dos retornos observados num determinado período.
 
 ![Tela 1 - Gráfico PU](./assets/pu_chart.png)
 
+
+VaR Paramétrico: Cálculo da perda máxima esperada considerando a volatilidade da série e o intervalo de confiança num determinado período.
+
+
 ![Tela 2 - VaR Paramétrico](./assets/var_parametrico.png)
+
+
+VaR Histórico: Análise não paramétrica baseada no percentil real da distribuição dos retornos observados num determinado período.
+
 
 ![Tela 3 - VaR Histórico](./assets/var_historico.png)
