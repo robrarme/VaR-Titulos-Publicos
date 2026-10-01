@@ -102,7 +102,7 @@ PERCENTILE.INC(fPrecoTaxa[VariaçãoDiária], 1 - 'IntervaloConfiança'[ValorInt
    ```bash
    git clone https://github.com/seu-usuario/var-titulos-publicos-powerbi.git
    ```
-2. Abra o arquivo `.pbix` localizado na pasta *assets* utilizando o **Power BI Desktop** (versão atualizada).
+2. Abra o arquivo `.pbix` localizado na pasta *assets* utilizando o **Power BI Desktop**.
 3. Use os filtros laterais para navegar entre os Títulos Públicos (ex: Tesouro IPCA+, Prefixado), alterar o Período de Análise e simular o Nível de Confiança desejado.
 
 ---
