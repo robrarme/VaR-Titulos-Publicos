@@ -1,0 +1,19 @@
+relationship 3875bfc3-43f3-4ad4-a38f-13565fb19bfd
+	joinOnDateBehavior: datePartOnly
+	fromColumn: fPrecoTaxa.'Data Anterior'
+	toColumn: LocalDateTable_41fffc15-2c39-40c1-a061-46fd39d4b3d0.Date
+
+relationship dbc151f4-96b0-4188-8858-613f3770b9aa
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dCalendario.Date
+	toColumn: LocalDateTable_346bbc46-4426-43c3-b660-0c3e7716d44f.Date
+
+relationship 1898a677-9f4c-6620-351b-92c5c1d78e89
+	crossFilteringBehavior: bothDirections
+	fromColumn: fPrecoTaxa.'Data Base'
+	toColumn: dCalendario.Date
+
+relationship AutoDetected_9aec4f78-d47d-4594-b91a-bf3b6b6c0655
+	fromColumn: fPrecoTaxa.IDTituloPublico
+	toColumn: dTituloPublico.IDTituloPublico
+

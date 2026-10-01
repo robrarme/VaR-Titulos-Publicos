@@ -1,0 +1,45 @@
+table dTituloPublico
+	lineageTag: 01a6bb27-5b71-4443-9625-8e14ea893179
+
+	column 'Título Público'
+		dataType: string
+		lineageTag: c4cf9c41-d237-43eb-8295-be7eb724f4a2
+		summarizeBy: none
+		sourceColumn: Título Público
+
+		annotation SummarizationSetBy = Automatic
+
+	column IDTituloPublico
+		dataType: int64
+		formatString: 0
+		lineageTag: 17d75c6b-ac94-4e05-977f-ca3b09c2a589
+		summarizeBy: none
+		sourceColumn: IDTituloPublico
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dTituloPublico = m
+		mode: import
+		source =
+				let
+				    Fonte = Csv.Document(File.Contents("C:\Users\robra\OneDrive\Desktop\Idéias e Projetos\Projetos\Bank Marketing\precotaxatesourodireto.csv"),[Delimiter=";", Columns=8, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Fonte, [PromoteAllScalars=true]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"Tipo Titulo", type text}, {"Data Vencimento", type date}, {"Data Base", type date}, {"Taxa Compra Manha", type number}, {"Taxa Venda Manha", type number}, {"PU Compra Manha", type number}, {"PU Venda Manha", type number}, {"PU Base Manha", type number}}),
+				    #"Dividir Coluna por Delimitador" = Table.SplitColumn(Table.TransformColumnTypes(#"Tipo Alterado", {{"Data Vencimento", type text}}, "pt-BR"), "Data Vencimento", Splitter.SplitTextByDelimiter("/", QuoteStyle.Csv), {"Data Vencimento.1", "Data Vencimento.2", "Data Vencimento.3"}),
+				    #"Tipo Alterado1" = Table.TransformColumnTypes(#"Dividir Coluna por Delimitador",{{"Data Vencimento.1", Int64.Type}, {"Data Vencimento.2", Int64.Type}, {"Data Vencimento.3", Int64.Type}}),
+				    #"Colunas Removidas" = Table.RemoveColumns(#"Tipo Alterado1",{"Data Vencimento.1", "Data Vencimento.2"}),
+				    #"Colunas Mescladas" = Table.CombineColumns(Table.TransformColumnTypes(#"Colunas Removidas", {{"Data Vencimento.3", type text}}, "pt-BR"),{"Tipo Titulo", "Data Vencimento.3"},Combiner.CombineTextByDelimiter(" ", QuoteStyle.None),"Título Público"),
+				    #"Colunas Removidas1" = Table.RemoveColumns(#"Colunas Mescladas",{"Taxa Compra Manha", "Taxa Venda Manha", "PU Compra Manha", "PU Venda Manha"}),
+				    #"Duplicatas Removidas" = Table.Distinct(#"Colunas Removidas1"),
+				    #"Colunas Removidas2" = Table.RemoveColumns(#"Duplicatas Removidas",{"Data Base", "PU Base Manha"}),
+				    #"Duplicatas Removidas1" = Table.Distinct(#"Colunas Removidas2"),
+				    #"Linhas Classificadas" = Table.Sort(#"Duplicatas Removidas1",{{"Título Público", Order.Ascending}}),
+				    #"Índice Adicionado" = Table.AddIndexColumn(#"Linhas Classificadas", "Índice", 1, 1, Int64.Type),
+				    #"Colunas Renomeadas" = Table.RenameColumns(#"Índice Adicionado",{{"Índice", "IDTituloPublico"}})
+				in
+				    #"Colunas Renomeadas"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,198 @@
+table fPrecoTaxa
+	lineageTag: 752c6d1f-ff65-456c-aa04-3b25b2853828
+
+	measure Media_Histograma = ```
+			AVERAGE(fPrecoTaxa[VariaçãoDiária])
+			
+			```
+		lineageTag: 00995f84-4ff3-4441-85a3-fd225227b1d4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Desvio_Padrao = STDEV.P(fPrecoTaxa[VariaçãoDiária])
+		lineageTag: 71c5ead8-4dfb-4f52-b54c-eeafe65d1de7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Linha_VaR_95 = [Media_Histograma] - (NORM.S.INV('IntervaloConfiança'[ValorIntervaloConfiança]) * [Desvio_Padrao])
+		lineageTag: 0a2b5824-3449-45c8-9ee2-61c815262b66
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Linha_VaR_95_Historico = ```
+			PERCENTILE.INC(fPrecoTaxa[VariaçãoDiária], 1-'IntervaloConfiança'[ValorIntervaloConfiança])
+			
+			```
+		lineageTag: 3f1a2e50-bb28-4ce4-8765-55af72eac19e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Data Base'
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: f3891b76-ea06-4759-be78-786ff7b6e417
+		summarizeBy: none
+		sourceColumn: Data Base
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'PU Base Manha'
+		dataType: double
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		lineageTag: dc60cf45-3f78-46df-94a3-91decc7d876d
+		summarizeBy: sum
+		sourceColumn: PU Base Manha
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column 'Título Público'
+		dataType: string
+		lineageTag: f328eded-81e1-43c2-b2a6-78df3d44e643
+		summarizeBy: none
+		sourceColumn: Título Público
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Data Anterior' =
+			
+			VAR DataLinhaAtual = fPrecoTaxa[Data Base]
+			VAR TituloPublico = fPrecoTaxa[Título Público]
+			RETURN
+			    CALCULATE(
+			        MAX(fPrecoTaxa[Data Base]),
+			        ALL(fPrecoTaxa),
+			        fPrecoTaxa[Data Base] < DataLinhaAtual,
+			        fPrecoTaxa[Título Público] = TituloPublico
+			    )
+		formatString: Short Date
+		lineageTag: 7c0ab726-23a2-45dd-aa76-45c45e502ea9
+		summarizeBy: none
+
+		variation Variation
+			isDefault
+			relationship: 3875bfc3-43f3-4ad4-a38f-13565fb19bfd
+			defaultHierarchy: LocalDateTable_41fffc15-2c39-40c1-a061-46fd39d4b3d0.'Hierarquia de datas'
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column VariaçãoDiária = ```
+			
+			VAR TituloPublico = [Título Público]
+			VAR DataLinhaAtual = [Data Base]
+			VAR PUBase = [PU Base Manha]
+			
+			-- 1. Descobre a última data de negociação anterior deste título
+			VAR DataAnterior = 
+			    CALCULATE(
+			        MAX(fPrecoTaxa[Data Base]),
+			        REMOVEFILTERS(fPrecoTaxa),
+			        fPrecoTaxa[Data Base] < DataLinhaAtual,
+			        fPrecoTaxa[Título Público] = TituloPublico
+			    )
+			
+			RETURN
+			-- 2. Busca o PU dessa data. Se houver mais de um PU no dia, o MAX desempata e evita o erro.
+			IFERROR(LN(PUBase/CALCULATE(
+			    MAX(fPrecoTaxa[PU Base Manha]),
+			    REMOVEFILTERS(fPrecoTaxa),
+			    fPrecoTaxa[Data Base] = DataAnterior,
+			    fPrecoTaxa[Título Público] = TituloPublico)),BLANK())
+			
+			```
+		formatString: 0.000%;-0.000%;0.000%
+		lineageTag: 6b789b05-360a-4e77-b68d-77a284cd93db
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation __PBI_SemanticLinks = [{"LinkTarget":{"TableName":"fPrecoTaxa","TableItemName":"VariaçãoDiária (compartimentos)","ObjectType":4},"LinkType":"UsedInGroup"}]
+
+	column IDTituloPublico
+		dataType: int64
+		formatString: 0
+		lineageTag: b55e73f8-5a7a-46c3-ba96-65d00681b6b0
+		summarizeBy: none
+		sourceColumn: IDTituloPublico
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'VariaçãoDiária (compartimentos)' = ```
+			VAR __Count = 100
+			
+			VAR __Min = MIN('fPrecoTaxa'[VariaçãoDiária])
+			
+			VAR __Max = MAX('fPrecoTaxa'[VariaçãoDiária])
+			
+			VAR __Difference = (__Max - __Min)
+			
+			VAR __Size = IF(__Difference > 0, __Difference / __Count, 1)
+			
+			VAR __BinNumber = 
+				IF(
+					ISBLANK('fPrecoTaxa'[VariaçãoDiária]),
+					BLANK(),
+					ROUNDDOWN(('fPrecoTaxa'[VariaçãoDiária] - __Min) / __Size, 0)
+				)
+			
+			RETURN
+				IF(
+					ISBLANK('fPrecoTaxa'[VariaçãoDiária]),
+					BLANK(),
+					__Min + (MIN(__BinNumber, __Count - 1) * __Size)
+				)
+			```
+		formatString: 0.000%;-0.000%;0.000%
+		lineageTag: c29f75f3-c9a9-4303-8707-bd5c8ba534db
+		summarizeBy: none
+
+		extendedProperty GroupingMetadata =
+				{
+				  "version": 0,
+				  "groupedColumns": [
+				    {
+				      "Column": {
+				        "Expression": {
+				          "SourceRef": {
+				            "Entity": "fPrecoTaxa"
+				          }
+				        },
+				        "Property": "VariaçãoDiária"
+				      }
+				    }
+				  ]
+				}
+
+		annotation GroupingDesignState = {"Version":0,"Sources":[{"Name":"f","Entity":"fPrecoTaxa"}],"GroupedColumns":[{"Column":{"Expression":{"SourceRef":{"Source":"f"}},"Property":"VariaçãoDiária"}}],"BinItem":{"Expression":{"Member":{"Expression":{"Discretize":{"Expression":{"Column":{"Expression":{"SourceRef":{"Source":"f"}},"Property":"VariaçãoDiária"}},"Count":100}},"Member":"Min"}}}}
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fPrecoTaxa = m
+		mode: import
+		source =
+				let
+				    Fonte = Csv.Document(File.Contents("C:\Users\robra\OneDrive\Desktop\Idéias e Projetos\Projetos\Bank Marketing\precotaxatesourodireto.csv"),[Delimiter=";", Columns=8, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Fonte, [PromoteAllScalars=true]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"Tipo Titulo", type text}, {"Data Vencimento", type date}, {"Data Base", type date}, {"Taxa Compra Manha", type number}, {"Taxa Venda Manha", type number}, {"PU Compra Manha", type number}, {"PU Venda Manha", type number}, {"PU Base Manha", type number}}),
+				    #"Dividir Coluna por Delimitador" = Table.SplitColumn(Table.TransformColumnTypes(#"Tipo Alterado", {{"Data Vencimento", type text}}, "pt-BR"), "Data Vencimento", Splitter.SplitTextByDelimiter("/", QuoteStyle.Csv), {"Data Vencimento.1", "Data Vencimento.2", "Data Vencimento.3"}),
+				    #"Tipo Alterado1" = Table.TransformColumnTypes(#"Dividir Coluna por Delimitador",{{"Data Vencimento.1", Int64.Type}, {"Data Vencimento.2", Int64.Type}, {"Data Vencimento.3", Int64.Type}}),
+				    #"Colunas Removidas" = Table.RemoveColumns(#"Tipo Alterado1",{"Data Vencimento.1", "Data Vencimento.2"}),
+				    #"Colunas Mescladas" = Table.CombineColumns(Table.TransformColumnTypes(#"Colunas Removidas", {{"Data Vencimento.3", type text}}, "pt-BR"),{"Tipo Titulo", "Data Vencimento.3"},Combiner.CombineTextByDelimiter(" ", QuoteStyle.None),"Título Público"),
+				    #"Colunas Removidas1" = Table.RemoveColumns(#"Colunas Mescladas",{"Taxa Compra Manha", "Taxa Venda Manha", "PU Compra Manha", "PU Venda Manha"}),
+				    #"Duplicatas Removidas" = Table.Distinct(#"Colunas Removidas1"),
+				    #"Consultas Mescladas" = Table.NestedJoin(#"Duplicatas Removidas", {"Título Público"}, dTituloPublico, {"Título Público"}, "dTituloPublico", JoinKind.LeftOuter),
+				    #"dTituloPublico Expandido" = Table.ExpandTableColumn(#"Consultas Mescladas", "dTituloPublico", {"IDTituloPublico"}, {"IDTituloPublico"})
+				in
+				    #"dTituloPublico Expandido"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

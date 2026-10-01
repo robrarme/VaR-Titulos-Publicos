@@ -1,0 +1,123 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "0b0fe0958b171a8eca02",
+  "position": {
+    "x": 364.51443569553805,
+    "y": 0,
+    "z": 0,
+    "height": 720.62992125984249,
+    "width": 915.485564304462,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fPrecoTaxa"
+                    }
+                  },
+                  "Property": "Data Base"
+                }
+              },
+              "queryRef": "precotaxatesourodireto.Data Base.Variation.Hierarquia de datas.Ano",
+              "nativeQueryRef": "Data Base Ano",
+              "active": true
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fPrecoTaxa"
+                    }
+                  },
+                  "Property": "Título Público"
+                }
+              },
+              "queryRef": "precotaxatesourodireto.Título Público",
+              "nativeQueryRef": "Título Público"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "fPrecoTaxa"
+                        }
+                      },
+                      "Property": "PU Base Manha"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(precotaxatesourodireto.PU Base Manha)",
+              "nativeQueryRef": "Soma de PU Base Manha1"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "valueAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

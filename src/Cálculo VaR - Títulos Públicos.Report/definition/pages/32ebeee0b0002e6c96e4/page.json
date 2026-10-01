@@ -1,0 +1,60 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "32ebeee0b0002e6c96e4",
+  "displayName": "VaR Histórico",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280,
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "b1ce84e03e397e0e400e",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fPrecoTaxa"
+              }
+            },
+            "Property": "Título Público"
+          }
+        },
+        "type": "Categorical",
+        "howCreated": "User"
+      },
+      {
+        "name": "75d106c3a4d9b316be76",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fPrecoTaxa"
+              }
+            },
+            "Property": "Data Base"
+          }
+        },
+        "type": "RelativeDate",
+        "howCreated": "User"
+      }
+    ],
+    "filterSortOrder": "Ascending"
+  },
+  "pageBinding": {
+    "name": "0734deb7e0005b4929e2",
+    "type": "Default",
+    "parameters": []
+  },
+  "visualInteractions": [
+    {
+      "source": "e531b68ad882e3687303",
+      "target": "3e59405600807e0aa3bc",
+      "type": "DataFilter"
+    },
+    {
+      "source": "c15f66b0d4804d9840d0",
+      "target": "e531b68ad882e3687303",
+      "type": "DataFilter"
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "a6c95a2430c4640eae14",
+  "displayName": "VaR Paramétrico",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280,
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "b1ce84e03e397e0e400e",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fPrecoTaxa"
+              }
+            },
+            "Property": "Título Público"
+          }
+        },
+        "type": "Categorical",
+        "howCreated": "User"
+      },
+      {
+        "name": "75d106c3a4d9b316be76",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fPrecoTaxa"
+              }
+            },
+            "Property": "Data Base"
+          }
+        },
+        "type": "RelativeDate",
+        "howCreated": "User"
+      }
+    ],
+    "filterSortOrder": "Ascending"
+  },
+  "pageBinding": {
+    "name": "e42557c8b72c09e63891",
+    "type": "Default",
+    "parameters": []
+  },
+  "visualInteractions": [
+    {
+      "source": "08706100d0b98a21e67b",
+      "target": "5e6aa81f58b2222104ec",
+      "type": "DataFilter"
+    },
+    {
+      "source": "44c58a77e0d655b58c31",
+      "target": "08706100d0b98a21e67b",
+      "type": "DataFilter"
+    }
+  ]
+}

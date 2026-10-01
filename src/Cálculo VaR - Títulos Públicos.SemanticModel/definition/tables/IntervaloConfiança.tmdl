@@ -1,0 +1,29 @@
+table IntervaloConfiança
+	lineageTag: 81e05477-f9dd-4347-8b78-61d70473d386
+
+	measure ValorIntervaloConfiança = SELECTEDVALUE('IntervaloConfiança'[Intervalo de Confiança], 950)
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 4f3bcb14-bf64-4755-ae70-33799241b885
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column 'Intervalo de Confiança'
+		lineageTag: edc8254e-49ab-430f-a84a-0cad9a87b8c7
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 0
+				}
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition IntervaloConfiança = calculated
+		mode: import
+		source = GENERATESERIES(CURRENCY(0.9), CURRENCY(0.995), CURRENCY(0.005))
+
+	annotation PBI_Id = b8f7063c6f324a5b8c5705e6870ee5d0
+
